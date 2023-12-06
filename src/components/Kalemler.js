@@ -25,6 +25,7 @@ function Kalemler() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
+    const [giderType, setGiderType] = useState(0);
     const [formMethod, setFormMethod] = useState('POST');
     const [formUrl, setFormUrl] = useState('');
     const [detailId, setDetailId] = useState('');
@@ -51,6 +52,7 @@ function Kalemler() {
         setName('');
         setDescription('');
         setType('');
+        setGiderType(0);
         setModalTitle("Yeni Kayıt");
         handleOpen();
         setFormMethod("POST");
@@ -72,6 +74,7 @@ function Kalemler() {
             setName(data.name);
             setDescription(data.description);
             setType(data.type);
+            setGiderType(data.giderType);
         } catch (error) {
             console.error('Response Error:', error);
         }
@@ -119,6 +122,7 @@ function Kalemler() {
         { field: 'name', headerName: 'Adı', width: 200 },
         { field: 'description', headerName: 'Açıklama', width: 250 },
         { field: 'type', headerName: 'Tür', width: 90 },
+        { field: 'giderType', headerName: 'Gider Türü', width: 90 },
         { field: 'tarih', headerName: 'Tarih', width: 120 },
         {
             field: 'actions',
@@ -226,6 +230,23 @@ function Kalemler() {
                                         Gelir
                                     </MenuItem>
                                 </TextField>
+                                <TextField
+                                    id="giderType"
+                                    select
+                                    label="Gider Türü"
+                                    defaultValue={giderType}
+                                    onChange={(e) => setGiderType(e.target.value)}
+                                >
+                                    <MenuItem key={0} value={0}>
+                                        Fatura
+                                    </MenuItem>
+                                    <MenuItem key={1} value={1}>
+                                        Kredi Kartı
+                                    </MenuItem>
+                                    <MenuItem key={2} value={2}>
+                                        Diğer
+                                    </MenuItem>
+                                </TextField>
                             </div>
                             <div>
                                 <Stack direction="row" spacing={2}>
@@ -248,7 +269,7 @@ function Kalemler() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, type, description }),
+                body: JSON.stringify({ name, type, giderType, description }),
             });
 
             if (response.ok) {
