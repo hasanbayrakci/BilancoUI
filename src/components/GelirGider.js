@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { Button, IconButton, Typography, Box, TextField } from '@mui/material';
-import Modal from '@mui/material/Modal';
 import Stack from '@mui/material/Stack';
+import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -11,21 +11,26 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import 'dayjs/locale/tr';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 
-function Kalemler() {
 
-    const [kalemler, setKalemler] = useState([]);
+function GelirGider() {
 
+    const [gelirgider, setGelirGider] = useState([]);
+    const [kalemTurleri, setKalemTurleri] = useState([]);
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
     const [modalTitle, setModalTitle] = useState('');
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [type, setType] = useState('');
-    const [giderType, setGiderType] = useState(0);
+    const [kalem, setKalem] = useState('');
+    const [tutar, setTutar] = useState('');
+    const [islemtarihi, setIslemTarihi] = useState(dayjs(new Date()));
     const [formMethod, setFormMethod] = useState('POST');
     const [formUrl, setFormUrl] = useState('');
     const [detailId, setDetailId] = useState('');
@@ -38,79 +43,29 @@ function Kalemler() {
         setOpenBackDrop(true);
     };
 
-    const [openAlert, setOpenAlert] = useState(false);
+    useEffect(() => {
+        getGelirGider();
+        getKalemTurleri();
+    }, []);
 
-    const handleOpenAlert = () => {
-        setOpenAlert(true);
-    };
-
-    const handleCloseAlert = () => {
-        setOpenAlert(false);
-    };
-
-    const CreateClick = () => {
-        setName('');
-        setDescription('');
-        setType('');
-        setGiderType(0);
-        setModalTitle("Yeni Kayıt");
-        handleOpen();
-        setFormMethod("POST");
-        setFormUrl("https://localhost:7068/Kalemler");
-    }
-
-    const editClick = async(id) => {
-        await detailKalemler(id);
-        setModalTitle("Kayıt Düzenle");
-        handleOpen();
-        setFormMethod("PUT");
-        setFormUrl('https://localhost:7068/Kalemler/' + id);
-    };
-
-    const detailKalemler = async (id) => {
+    const getGelirGider = async () => {
         try {
-            const response = await fetch('https://localhost:7068/Kalemler/' + id);
+            handleBackDropOpen();
+            const response = await fetch('https://localhost:7068/GelirGider');
             const data = await response.json();
-            setName(data.name);
-            setDescription(data.description);
-            setType(data.type);
-            setGiderType(data.giderType);
+            setGelirGider(data);
+            handleBackDropClose();
         } catch (error) {
             console.error('Response Error:', error);
         }
     };
 
-    const deleteClick = (id) => {
-        handleOpenAlert();
-        setDetailId(id);
-    }
-
-    const alertDeleteClick = () => {
-        deleteKalemler(detailId);
-    }
-
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-    };
-
-    useEffect(() => {
-        getKalemler();
-    }, []);
-
-    const getKalemler = async () => {
+    const getKalemTurleri = async () => {
         try {
             handleBackDropOpen();
             const response = await fetch('https://localhost:7068/Kalemler');
             const data = await response.json();
-            setKalemler(data);
+            setKalemTurleri(data);
             handleBackDropClose();
         } catch (error) {
             console.error('Response Error:', error);
@@ -119,11 +74,9 @@ function Kalemler() {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'name', headerName: 'Adı', width: 200 },
-        { field: 'description', headerName: 'Açıklama', width: 250 },
-        { field: 'type', headerName: 'Tür', width: 90 },
-        { field: 'giderType', headerName: 'Gider Türü', width: 90 },
-        { field: 'tarih', headerName: 'Tarih', width: 120 },
+        { field: 'kalem', headerName: 'Gider Kalemi', width: 250 },
+        { field: 'tutar', headerName: 'Tutar', width: 250 },
+        { field: 'islemTarihi', headerName: 'Gider Tarihi', width: 250 },
         {
             field: 'actions',
             headerName: 'İşlemler',
@@ -143,13 +96,48 @@ function Kalemler() {
         }
     ];
 
-    const rows = kalemler;
+    const CreateClick = () => {
+        setKalem('');
+        setTutar('');
+        setIslemTarihi(dayjs(new Date()));
+        setModalTitle("Yeni Kayıt");
+        handleOpen();
+        setFormMethod("POST");
+        setFormUrl("https://localhost:7068/GelirGider");
+    }
+
+    const editClick = async (id) => {
+        await detailGelirGider(id);
+        setModalTitle("Kayıt Düzenle");
+        handleOpen();
+        setFormMethod("PUT");
+        setFormUrl('https://localhost:7068/GelirGider/' + id);
+    };
+
+    const deleteClick = (id) => {
+        handleOpenAlert();
+        setDetailId(id);
+    }
+
+    const alertDeleteClick = () => {
+        deleteGelirGider(detailId);
+    }
+
+    const [openAlert, setOpenAlert] = useState(false);
+
+    const handleOpenAlert = () => {
+        setOpenAlert(true);
+    };
+
+    const handleCloseAlert = () => {
+        setOpenAlert(false);
+    };
 
     const CustomToolbar = () => {
         return (
             <GridToolbarContainer>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    Kalemler
+                    Gelir Gider
                 </Typography>
                 <Button variant="contained" color="primary" size='small' onClick={CreateClick}>
                     Ekle
@@ -161,7 +149,9 @@ function Kalemler() {
         );
     };
 
-    const tableKalemler = () => {
+    const rows = gelirgider;
+
+    const tableGelirGider = () => {
         return (
             <div>
                 <DataGrid
@@ -181,6 +171,30 @@ function Kalemler() {
             </div>
         )
     }
+
+    const detailGelirGider = async (id) => {
+        try {
+            const response = await fetch('https://localhost:7068/GelirGider/' + id);
+            const data = await response.json();
+            setKalem(data.kalemlerId);
+            setTutar(data.tutar);
+            setIslemTarihi(data.islemTarihi);
+        } catch (error) {
+            console.error('Response Error:', error);
+        }
+    };
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
 
     const ModalPage = () => {
         return (
@@ -204,49 +218,32 @@ function Kalemler() {
                         >
                             <div>
                                 <TextField
-                                    required
-                                    id="name"
-                                    label="Adı"
-                                    defaultValue={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                                <TextField
-                                    id="description"
-                                    label="Açıklama"
-                                    defaultValue={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                />
-                                <TextField
-                                    id="type"
+                                    id="kalem"
                                     select
-                                    label="Türü"
-                                    defaultValue={type}
-                                    onChange={(e) => setType(e.target.value)}
+                                    label="Kalem"
+                                    defaultValue={kalem}
+                                    onChange={(e) => setKalem(e.target.value)}
                                 >
-                                    <MenuItem key={0} value={0}>
-                                        Gider
-                                    </MenuItem>
-                                    <MenuItem key={1} value={1}>
-                                        Gelir
-                                    </MenuItem>
+                                    {kalemTurleri.map((option) => (
+                                        <MenuItem key={option.id} value={option.id}>
+                                            {option.name}
+                                        </MenuItem>
+                                    ))}
                                 </TextField>
                                 <TextField
-                                    id="giderType"
-                                    select
-                                    label="Gider Türü"
-                                    defaultValue={giderType}
-                                    onChange={(e) => setGiderType(e.target.value)}
-                                >
-                                    <MenuItem key={0} value={0}>
-                                        Fatura
-                                    </MenuItem>
-                                    <MenuItem key={1} value={1}>
-                                        Kredi Kartı
-                                    </MenuItem>
-                                    <MenuItem key={2} value={2}>
-                                        Diğer
-                                    </MenuItem>
-                                </TextField>
+                                    id="tutar"
+                                    label="Tutar"
+                                    type='number'
+                                    defaultValue={tutar}
+                                    onChange={(e) => setTutar(e.target.value)}
+                                />
+                                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="tr">
+                                    <DatePicker 
+                                    label="Gider Tarihi" 
+                                    format='DD.MM.YYYY' 
+                                    defaultValue={dayjs(islemtarihi)}
+                                    onChange={(e) => setIslemTarihi(e)}/>
+                                </LocalizationProvider>
                             </div>
                             <div>
                                 <Stack direction="row" spacing={2}>
@@ -269,12 +266,12 @@ function Kalemler() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, type, giderType, description }),
+                body: JSON.stringify({ kalem, tutar, islemtarihi }),
             });
 
             if (response.ok) {
                 console.log('Veri başarıyla gönderildi');
-                getKalemler();
+                getGelirGider();
                 handleClose();
             } else {
                 console.error('Veri gönderme hatası');
@@ -283,27 +280,6 @@ function Kalemler() {
             console.error('Bir hata oluştu:', error);
         }
     };
-
-    const deleteKalemler = async (id) => {
-        try {
-            const response = await fetch('https://localhost:7068/Kalemler/' + id, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (response.ok) {
-                console.log('Kalem başarıyla silindi');
-                getKalemler();
-                handleCloseAlert();
-            } else {
-                console.error('Kalem silinirken bir hata oluştu');
-            }
-        } catch (error) {
-            console.error('Bir hata oluştu:', error);
-        }
-    }
 
     const BackDrop = () => {
         return (
@@ -315,6 +291,27 @@ function Kalemler() {
                 <CircularProgress color="inherit" />
             </Backdrop>
         )
+    }
+
+    const deleteGelirGider = async (id) => {
+        try {
+            const response = await fetch('https://localhost:7068/GelirGider/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                console.log('İşlem başarıyla silindi');
+                getGelirGider();
+                handleCloseAlert();
+            } else {
+                console.error('İşlem silinirken bir hata oluştu');
+            }
+        } catch (error) {
+            console.error('Bir hata oluştu:', error);
+        }
     }
 
     const AlertDialog = () => {
@@ -345,14 +342,13 @@ function Kalemler() {
 
     return (
         <div>
-            {tableKalemler()}
+            {tableGelirGider()}
             {ModalPage()}
             {BackDrop()}
             {AlertDialog()}
         </div>
     )
-
 }
 
 
-export default Kalemler
+export default GelirGider
