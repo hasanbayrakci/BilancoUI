@@ -1,71 +1,59 @@
-import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
-import Title from './Title';
+import React, { useState, useEffect } from 'react';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { MenuItem, TextField } from '@mui/material';
 
-// Generate Sales Data
-function createData(time, amount) {
-  return { time, amount };
-}
-
-const data = [
-  createData('00:00', 0),
-  createData('03:00', 300),
-  createData('06:00', 600),
-  createData('09:00', 800),
-  createData('12:00', 1500),
-  createData('15:00', 2000),
-  createData('18:00', 2400),
-  createData('21:00', 2400),
-  createData('24:00', undefined),
-];
 
 export default function Chart() {
-  const theme = useTheme();
+
+  const [series, setSeries] = useState([]);
+  const [kalemTurleri, setKalemTurleri] = useState([]);
+
+  const getData = async (id) => {
+    try {
+      const response = await fetch('https://localhost:7068/Chart/' + id);
+      const data = await response.json();
+      setSeries(data);
+    } catch (error) {
+      console.error('Response Error:', error);
+    }
+  };
+
+  useEffect(() => {
+    getKalemTurleri();
+  }, []);
+
+
+  const getKalemTurleri = async () => {
+    try {
+      const response = await fetch('https://localhost:7068/Kalemler');
+      const data = await response.json();
+      setKalemTurleri(data);
+      getData(data[0].id);
+    } catch (error) {
+      console.error('Response Error:', error);
+    }
+  };
+
 
   return (
-    <React.Fragment>
-      <Title>Today</Title>
-      <ResponsiveContainer>
-        <LineChart
-          data={data}
-          margin={{
-            top: 16,
-            right: 16,
-            bottom: 0,
-            left: 24,
-          }}
-        >
-          <XAxis
-            dataKey="time"
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-          />
-          <YAxis
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-          >
-            <Label
-              angle={270}
-              position="left"
-              style={{
-                textAnchor: 'middle',
-                fill: theme.palette.text.primary,
-                ...theme.typography.body1,
-              }}
-            >
-              Sales ($)
-            </Label>
-          </YAxis>
-          <Line
-            isAnimationActive={false}
-            type="monotone"
-            dataKey="amount"
-            stroke={theme.palette.primary.main}
-            dot={false}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </React.Fragment>
+    <>
+      <TextField
+        id="kalem"
+        select
+        label="Kalem"
+        defaultValue={1}
+        onChange={(e) => getData(e.target.value)}
+      >
+        {kalemTurleri.map((option) => (
+          <MenuItem key={option.id} value={option.id}>
+            {option.name}
+          </MenuItem>
+        ))}
+      </TextField>
+      <BarChart
+        xAxis={[{ scaleType: 'band', data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }]}
+        series={series}
+      />
+    </>
   );
 }
