@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/tr';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import apiUrl from './Config';
 
 
 
@@ -51,7 +52,7 @@ function GelirGider() {
     const getGelirGider = async () => {
         try {
             handleBackDropOpen();
-            const response = await fetch('https://localhost:7068/GelirGider');
+            const response = await fetch(apiUrl + 'GelirGider');
             const data = await response.json();
             setGelirGider(data);
             handleBackDropClose();
@@ -63,7 +64,7 @@ function GelirGider() {
     const getKalemTurleri = async () => {
         try {
             handleBackDropOpen();
-            const response = await fetch('https://localhost:7068/Kalemler');
+            const response = await fetch(apiUrl + 'Kalemler');
             const data = await response.json();
             setKalemTurleri(data);
             handleBackDropClose();
@@ -103,7 +104,7 @@ function GelirGider() {
         setModalTitle("Yeni Kayıt");
         handleOpen();
         setFormMethod("POST");
-        setFormUrl("https://localhost:7068/GelirGider");
+        setFormUrl(apiUrl + 'GelirGider');
     }
 
     const editClick = async (id) => {
@@ -111,7 +112,7 @@ function GelirGider() {
         setModalTitle("Kayıt Düzenle");
         handleOpen();
         setFormMethod("PUT");
-        setFormUrl('https://localhost:7068/GelirGider/' + id);
+        setFormUrl(apiUrl + 'GelirGider/' + id);
     };
 
     const deleteClick = (id) => {
@@ -174,7 +175,7 @@ function GelirGider() {
 
     const detailGelirGider = async (id) => {
         try {
-            const response = await fetch('https://localhost:7068/GelirGider/' + id);
+            const response = await fetch(apiUrl + 'GelirGider/' + id);
             const data = await response.json();
             setKalem(data.kalemlerId);
             setTutar(data.tutar);
@@ -295,7 +296,7 @@ function GelirGider() {
 
     const deleteGelirGider = async (id) => {
         try {
-            const response = await fetch('https://localhost:7068/GelirGider/' + id, {
+            const response = await fetch(apiUrl + 'GelirGider/' + id, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

@@ -11,6 +11,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
+import apiUrl from './Config';
 
 
 function Kalemler() {
@@ -56,7 +57,7 @@ function Kalemler() {
         setModalTitle("Yeni Kayıt");
         handleOpen();
         setFormMethod("POST");
-        setFormUrl("https://localhost:7068/Kalemler");
+        setFormUrl(apiUrl + 'Kalemler');
     }
 
     const editClick = async(id) => {
@@ -64,12 +65,12 @@ function Kalemler() {
         setModalTitle("Kayıt Düzenle");
         handleOpen();
         setFormMethod("PUT");
-        setFormUrl('https://localhost:7068/Kalemler/' + id);
+        setFormUrl(apiUrl + 'Kalemler/' + id);
     };
 
     const detailKalemler = async (id) => {
         try {
-            const response = await fetch('https://localhost:7068/Kalemler/' + id);
+            const response = await fetch(apiUrl + 'Kalemler/' + id);
             const data = await response.json();
             setName(data.name);
             setDescription(data.description);
@@ -108,7 +109,7 @@ function Kalemler() {
     const getKalemler = async () => {
         try {
             handleBackDropOpen();
-            const response = await fetch('https://localhost:7068/Kalemler');
+            const response = await fetch(apiUrl + 'Kalemler');
             const data = await response.json();
             setKalemler(data);
             handleBackDropClose();
@@ -286,7 +287,7 @@ function Kalemler() {
 
     const deleteKalemler = async (id) => {
         try {
-            const response = await fetch('https://localhost:7068/Kalemler/' + id, {
+            const response = await fetch(apiUrl + 'Kalemler/' + id, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

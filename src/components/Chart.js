@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { MenuItem, TextField } from '@mui/material';
+import apiUrl from './Config';
 
 
 export default function Chart() {
@@ -10,7 +11,7 @@ export default function Chart() {
 
   const getData = async (id) => {
     try {
-      const response = await fetch('https://localhost:7068/Chart/' + id);
+      const response = await fetch(apiUrl + 'Chart/' + id);
       const data = await response.json();
       setSeries(data);
     } catch (error) {
@@ -25,7 +26,7 @@ export default function Chart() {
 
   const getKalemTurleri = async () => {
     try {
-      const response = await fetch('https://localhost:7068/Kalemler');
+      const response = await fetch(apiUrl + 'Kalemler');
       const data = await response.json();
       setKalemTurleri(data);
       getData(data[0].id);
