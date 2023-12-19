@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
+import TotalPay from './TotalPay';
 
 function Dashboard() {
 
@@ -22,7 +21,6 @@ function Dashboard() {
           <Chart />
         </Paper>
       </Grid>
-      {/* Recent Deposits */}
       <Grid item xs={12} md={4} lg={3}>
         <Paper
           sx={{
@@ -32,13 +30,7 @@ function Dashboard() {
             height: 240,
           }}
         >
-          <Deposits />
-        </Paper>
-      </Grid>
-      {/* Recent Orders */}
-      <Grid item xs={12}>
-        <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-          <Orders />
+          <TotalPay />
         </Paper>
       </Grid>
     </Grid>
