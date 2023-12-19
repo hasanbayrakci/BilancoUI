@@ -1,18 +1,19 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Title from './Title';
 
-const TotalPay = (props) => {
-console.log(props);
+const TotalPay = ({ chartData }) => {
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    setTotal(chartData[0]?.toplamData ?? 0);
+  }, [chartData]);
 
   return (
     <div>
-      <Title>Recent Deposits</Title>
+      <Title>Toplam Tutar</Title>
       <Typography component="p" variant="h4">
-        123
-      </Typography>
-      <Typography color="text.secondary" sx={{ flex: 1 }}>
-        on 15 March, 2019
+        {total}
       </Typography>
     </div>
   )

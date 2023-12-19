@@ -5,6 +5,13 @@ import Chart from './Chart';
 import TotalPay from './TotalPay';
 
 function Dashboard() {
+  document.title = "Ana Sayfa";
+
+  const [chartData, setChartData] = useState([]);
+
+  const updateChartData = (data) => {
+    setChartData(data);
+  };
 
   return (
     <Grid container spacing={3}>
@@ -18,7 +25,7 @@ function Dashboard() {
             height: 300,
           }}
         >
-          <Chart />
+          <Chart updateChartData={updateChartData} />
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} lg={3}>
@@ -30,7 +37,7 @@ function Dashboard() {
             height: 240,
           }}
         >
-          <TotalPay />
+          <TotalPay chartData={chartData} />
         </Paper>
       </Grid>
     </Grid>

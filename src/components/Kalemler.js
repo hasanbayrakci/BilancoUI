@@ -15,7 +15,7 @@ import apiUrl from './Config';
 
 
 function Kalemler() {
-
+    document.title = "Kalemler";
     const [kalemler, setKalemler] = useState([]);
 
     const [open, setOpen] = useState(false);

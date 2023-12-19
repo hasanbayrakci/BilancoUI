@@ -21,7 +21,7 @@ import apiUrl from './Config';
 
 
 function GelirGider() {
-
+    document.title = "Gelir Gider";
     const [gelirgider, setGelirGider] = useState([]);
     const [kalemTurleri, setKalemTurleri] = useState([]);
     const [open, setOpen] = useState(false);
