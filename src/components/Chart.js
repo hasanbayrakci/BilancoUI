@@ -9,7 +9,7 @@ import 'dayjs/locale/tr';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 
-export default function Chart(chartSeries, updateSeries) {
+export default function Chart({ updateChartData }) {
 
   const [series, setSeries] = useState([]);
   const [kalemTurleri, setKalemTurleri] = useState([]);
@@ -22,6 +22,7 @@ export default function Chart(chartSeries, updateSeries) {
       const response = await fetch(apiUrl + 'Chart/' + kalem + '/' + yil);
       const data = await response.json();
       setSeries(data);
+      updateChartData(data);
     } catch (error) {
       console.error('Response Error:', error);
     }
