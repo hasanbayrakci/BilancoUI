@@ -1,27 +1,21 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Title from './Title';
 
-function preventDefault(event) {
-  event.preventDefault();
-}
+const TotalPay = (props) => {
+console.log(props);
 
-export default function Deposits() {
   return (
-    <React.Fragment>
+    <div>
       <Title>Recent Deposits</Title>
       <Typography component="p" variant="h4">
-        $3,024.00
+        123
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
         on 15 March, 2019
       </Typography>
-      <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          View balance
-        </Link>
-      </div>
-    </React.Fragment>
-  );
+    </div>
+  )
 }
+
+export default TotalPay
