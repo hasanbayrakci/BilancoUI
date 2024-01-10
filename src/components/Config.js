@@ -1,3 +1,3 @@
-const apiUrl = 'https://localhost:7068/';
+const apiUrl = 'https://bilancoapp.azurewebsites.net/';
 
 export default apiUrl;
