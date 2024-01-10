@@ -59,4 +59,4 @@ jobs:
           app-name: 'bilanco'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D28C2550C9084F07B9D3C4248706B98E }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1D12FEC2602B4B3BAF6527173BA32560 }}
